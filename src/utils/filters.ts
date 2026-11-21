@@ -1,4 +1,5 @@
 import { Destination, DestinationCategory, StateId } from '../types/travel';
+import { normalizeSearchText } from './search';
 
 export type PermitFilter = 'all' | 'none' | 'required';
 export type BudgetTierFilter = 'all' | 'budget' | 'mid' | 'comfort';
@@ -72,8 +73,25 @@ export function filterAndSortDestinations(
     }
 
     if (query) {
-      const haystack = `${dest.name} ${dest.stateName} ${dest.regionLabel} ${dest.tagline} ${dest.categories.join(' ')}`.toLowerCase();
-      if (!haystack.includes(query)) {
+      const normalizedQuery = normalizeSearchText(query);
+      const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
+      const haystack = normalizeSearchText(
+        [
+          dest.name,
+          dest.slug.replace(/-/g, ' '),
+          dest.stateName,
+          dest.regionLabel,
+          dest.nearestHub,
+          dest.tagline,
+          dest.description,
+          dest.categories.join(' '),
+          dest.highlights.join(' '),
+          dest.dayActivities
+            .map((d) => `${d.morning} ${d.afternoon} ${d.evening}`)
+            .join(' '),
+        ].join(' ')
+      );
+      if (!tokens.every((token) => haystack.includes(token))) {
         return false;
       }
     }
