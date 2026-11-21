@@ -1,0 +1,6 @@
+{
+  "name": "TravelMateNE",
+  "description": "Discover the Eight Sisters of North East India with transparent local transit guides, realistic INR trip budgeting, and verified ILP and PAP permit navigation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
